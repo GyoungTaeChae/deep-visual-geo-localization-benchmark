@@ -187,9 +187,14 @@ class TripletsDataset(BaseDataset):
             logging.info(f"There are {len(queries_without_any_hard_positive)} queries without any positives " +
                          "within the training set. They won't be considered as they're useless for training.")
         # Remove queries without positives
-        self.hard_positives_per_query = np.delete(self.hard_positives_per_query, queries_without_any_hard_positive)
-        self.soft_positives_per_query = np.delete(self.soft_positives_per_query, queries_without_any_hard_positive)
-        self.queries_paths = np.delete(self.queries_paths, queries_without_any_hard_positive)
+        # self.hard_positives_per_query = np.delete(self.hard_positives_per_query, queries_without_any_hard_positive)
+        # self.soft_positives_per_query = np.delete(self.soft_positives_per_query, queries_without_any_hard_positive)
+        # self.queries_paths = np.delete(self.queries_paths, queries_without_any_hard_positive)
+
+        
+        self.hard_positives_per_query = [p for i, p in enumerate(self.hard_positives_per_query) if i not in queries_without_any_hard_positive]
+        self.soft_positives_per_query = [p for i, p in enumerate(self.soft_positives_per_query) if i not in queries_without_any_hard_positive]
+        self.queries_paths = [p for i, p in enumerate(self.queries_paths) if i not in queries_without_any_hard_positive]
         
         # Recompute images_paths and queries_num because some queries might have been removed
         self.images_paths = list(self.database_paths) + list(self.queries_paths)
